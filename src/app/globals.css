@@ -78,3 +78,7 @@
 .print-force-new-page {
   page-break-before: always;
 }
+
+.small-badge {
+  font-size: 0.625rem;
+}

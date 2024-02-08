@@ -1,5 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { Card, CardHeader, CardContent } from "../components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardContentList,
+} from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { CommandMenu } from "../components/command-menu";
 import { Metadata } from "next";
@@ -7,7 +12,7 @@ import { Section } from "../components/ui/section";
 import { GlobeIcon, MailIcon, PhoneIcon } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { RESUME_DATA } from "../data/resume-data";
-import { ProjectCard } from "../components/project-card";
+import { CardItem } from "../components/project-card";
 
 export const metadata = {
   title: `${RESUME_DATA.name} | ${RESUME_DATA.about}`,
@@ -42,7 +47,7 @@ export default function Page() {
                   </Button>
                 </a>
               ) : null}
-          
+
               {RESUME_DATA.contact.social.map((social) => (
                 <Button
                   key={social.name}
@@ -76,6 +81,34 @@ export default function Page() {
             {RESUME_DATA.summary}
           </p>
         </Section>
+        
+        <Section>
+          <h2 className="text-xl font-bold">Education</h2>
+          {RESUME_DATA.education.map((education) => {
+            return (
+              <Card key={education.institution}>
+                <CardHeader>
+                  <div className="flex items-center justify-between gap-x-2 text-base">
+                    <h3 className="font-semibold leading-none">
+                      {education.institution}, {education.location} (
+                      {education.start} - {education.end || "present"})
+                    </h3>
+                  </div>
+                </CardHeader>
+                <CardContent className="mt-2">
+                  <strong>{education.title}:</strong> {education.description}
+                </CardContent>
+                {/* Render the courses if they exist */}
+                {education.courses && (
+                  <>
+                    <CardContentList courses={education.courses} />
+
+                  </>
+                )}
+              </Card>
+            );
+          })}
+        </Section>
         <Section>
           <h2 className="text-xl font-bold">Work Experience</h2>
           {RESUME_DATA.work.map((work) => {
@@ -100,7 +133,7 @@ export default function Page() {
                         ))}
                       </span>
                     </h3>
-                    <div className="text-sm tabular-nums text-gray-500">
+                    <div className="text-sm tabular-nums text-gray-600">
                       {work.start} - {work.end}
                     </div>
                   </div>
@@ -109,36 +142,42 @@ export default function Page() {
                     {work.title}
                   </h4>
                 </CardHeader>
-                <CardContent className="mt-2 text-xs">
+                <CardContent className="text-sm text-muted-foreground">
                   {work.description}
                 </CardContent>
               </Card>
             );
           })}
         </Section>
-
         <Section className="print-force-new-page scroll-mb-16">
           <h2 className="text-xl font-bold">Projects</h2>
           <div className="-mx-3 grid grid-cols-1 gap-3 print:grid-cols-1 print:gap-2 md:grid-cols-1 lg:grid-cols-1">
-            {RESUME_DATA.projects.map((project) => {
+            {RESUME_DATA.publications.map((publication) => {
               return (
-                <ProjectCard
-                  key={project.title}
-                  title={project.title}
-                  description={project.description}
-                  tags={project.techStack}
-                  link={"link" in project ? project.link.href : undefined}
+                <CardItem
+                  key={publication.title}
+                  title={publication.title}
+                  tags={publication.techStack}
+                  link={
+                    "link" in publication ? publication.link.href : undefined
+                  }
+                  authors={publication.authors}
+                  journal={publication.journal}
+                  publicationDate={publication.publicationDate}
+                  isPublication={true}
+                  description={publication.description}
                 />
               );
             })}
           </div>
         </Section>
-        <Section className="print-force-new-page scroll-mb-16">
+
+        {/* <Section className="print-force-new-page scroll-mb-16">
           <h2 className="text-xl font-bold">Clients</h2>
           <div className="-mx-3 grid grid-cols-1 gap-3 print:grid-cols-3 print:gap-2 md:grid-cols-2 lg:grid-cols-3">
             {RESUME_DATA.clients.map((project) => {
               return (
-                <ProjectCard
+                <CardItem
                   key={project.title}
                   title={project.title}
                   description={project.description}
@@ -148,27 +187,7 @@ export default function Page() {
               );
             })}
           </div>
-        </Section>
-        <Section>
-          <h2 className="text-xl font-bold">Education</h2>
-          {RESUME_DATA.education.map((education) => {
-            return (
-              <Card key={education.school}>
-                <CardHeader>
-                  <div className="flex items-center justify-between gap-x-2 text-base">
-                    <h3 className="font-semibold leading-none">
-                      {education.school}
-                    </h3>
-                    <div className="text-sm tabular-nums text-gray-500">
-                      {education.start} - {education.end}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="mt-2">{education.degree}</CardContent>
-              </Card>
-            );
-          })}
-        </Section>
+        </Section> */}
         <Section>
           <h2 className="text-xl font-bold">Skills</h2>
           <div className="flex flex-wrap gap-1">
